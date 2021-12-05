@@ -3,13 +3,13 @@
 ### Cel
 
 Celem budowy aplikacji było przede wszystkim zaznajomienie się z podstawami frameworka SpringBoot oraz obsługa danych poprzez API dostarczanych w różnych formatach.
-Obecnie istnieje kilka dostępnych serwisów w podobnej tematyce. Dlatego też przy projektowaniu starano się zwrócić uwagę, aby niepowielać istniejących rozwiązań, lecz zaproponować trochę inne podejśćie.
+Obecnie istnieje kilka dostępnych serwisów w podobnej tematyce. Dlatego też przy projektowaniu starano się zwrócić uwagę, aby niepowielać istniejących rozwiązań, lecz zaproponować trochę inne podejście.
 ### Wykorzystane API, technologie oraz biblioteki
 
 * https://dane.gov.pl/en/dataset/762,ruch-statkow-w-portach-polskich
 * https://leafletjs.com/
 * Thymeleaf
-* Hibernate (SpingData)
+* Hibernate (SpringData)
 * PostgreSQL
 * Docker
 * SpingBoot Web
