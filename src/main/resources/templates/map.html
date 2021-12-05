@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoring Statków Morskich</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+    <link rel="stylesheet" th:href="@{../ui.css}"/>
+    <link rel="stylesheet" th:href="@{../uiMapPopup.css}"/>
+
+    <style>#map { height: 1080px; }
+    h1{font-size: 14px; font-family: "Open Sans"}</style>
+</head>
+<body>
+<div id="wrapper">
+
+    <div id="header" class="header">
+
+        <div class="header-nav box">
+            <div class="nav box">
+                <div class="nav__tools float-right">
+
+                </div>
+            </div>
+
+            <h1 style="font-size:1.7em;">🛳 Ruch statków w portach polskich</h1>
+        </div>
+    </div>
+
+<div id="map" class="main box mapaOgolnaNoPadding"></div>
+        <div class="route-map__wojewodztwo" id="route-map__wojewodztwoDIV" style="visibility: visible;">
+           <select class="mate-select abt-c-bb" id="route-map__wojewodztwo" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                <option value="">Wybierz port...</option>
+                <option value="/gdynia">Gdynia</option>
+                <option value="/gdansk-port-polnocny">Gdańsk Port Północny</option>
+                <option value="/gdansk-nowy-port">Gdańsk Nowy Port</option>
+                <option value="/swinoujscie">Świnoujście</option>
+                <option value="/police">Police</option>
+                <option value="/szczecin">Szczecin</option>
+            </select>
+        </div>
+
+</div>
+
+
+
+
+</div>
+
+<script th:inline="javascript">
+
+    const map = L.map('map').setView([52.95, 19.23], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const marinaIcon = L.icon({
+        iconUrl: 'port.png',
+
+        iconSize:     [27, 27], // size of the icon
+        iconAnchor:   [27, 27], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+    });
+
+    const boatIcon = L.icon({
+        iconUrl: 'boat.png',
+
+        iconSize:     [32, 37], // size of the icon
+        iconAnchor:   [32, 32], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+    const ports = [[${ports}]];
+
+
+
+    ports.forEach(value => {
+        var polygon;
+        const portSlugName = correctPolishLetters(value.name.toLowerCase().replace(/ /g, '-'));
+        L.marker([value.x, value.y],{icon: marinaIcon}).addTo(map)
+            .bindPopup('<div id="popupPOC" class="ol-popup" style="z-index: 1000; visibility: visible;">\n' +
+                '    <div id="trainCloudID_285" style="width:300px">\n' +
+                '        <div class="row">\n' +
+                '            <div class="col-5">\n' +
+                '                <strong class="item-value" style="margin-bottom:10px"> ' + value.name  + ' </strong>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '        <div class="row">\n' +
+                '            <div class="col-8">\n' +
+                '                <a id="ui_button" class="btn btn--outline btn--sm" style="margin-bottom:10px; border: 1px solid;" onclick="href=\'details/' + portSlugName + '\'"> Szczegóły </a>\n' +
+                '\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '     </div>\n' +
+                '</div>')
+            .openPopup()
+            .on('mouseover', () => {
+                polygon = L.polygon([
+                    [value.x, value.y],
+                    [value.x, value.y],
+                ]).addTo(map);
+            })
+            .on('mouseout', () => {
+                map.removeLayer(polygon);
+            })});
+
+
+
+        const vessels = [[${vessels}]];
+
+        vessels.forEach(value => {
+            var polygon;
+            L.marker([value.x, value.y],{icon: boatIcon}).addTo(map)
+                .bindPopup('<div id="popupPOC" class="ol-popup" style="z-index: 1000; visibility: visible;">\n' +
+                    '    <a id="popupPOC-closer" href="#" class="ol-popup-closer"></a>\n' +
+                    '    <div id="popupPOC-content">\n' +
+                    '    <div id="trainCloudID_285" style="width:300px">\n' +
+                    '        <div class="row">\n' +
+                    '            <div class="col-5">\n' +
+                    '                <span class="item-label">Nazwa statku</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px"> ' + value.vesselName + ' </strong>\n' +
+                    '            </div>\n' +
+                    '            <div class="col-3">\n' +
+                    '                <span class="item-label">Znak wywoławczy</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px">  ' + value.callId + ' </strong>\n' +
+                    '            </div>\n' +
+                    '            <div class="col-3">\n' +
+                    '                <span class="item-label">Bandera</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px"><img src="https://flagcdn.com/16x12/' + value.countryCode + '.png"> ' + value.vesselFlag + ' </strong>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="row">\n' +
+                    '            <div class="col-5">\n' +
+                    '                <span class="item-label">Rodzaj statku</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px"> ' + value.vesselType + '</strong>\n' +
+                    '            </div>\n' +
+                    '            <div class="col-3">\n' +
+                    '                <span class="item-label">Przypłynął z</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px"> ' + value.lastPort + '</strong>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="row">\n' +
+                    '            <div class="col-3">\n' +
+                    '                <span class="item-label">Następny port</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px">' + value.nextPort + '</strong>\n' +
+                    '            </div>\n' +
+                    '            <div class="col-5">\n' +
+                    '                <span class="item-label">ETA</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px">' + value.eta + '</strong>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="row">\n' +
+                    '            <div class="col-3">\n' +
+                    '                <span class="item-label">ATA</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px">' + value.ata + '</strong>\n' +
+                    '            </div>\n' +
+                    '            <div class="col-10">\n' +
+                    '                <span class="item-label">Status</span>\n' +
+                    '                <strong class="item-value" style="margin-bottom:10px">' + value.statusId + '</strong>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="row">\n' +
+                    '            <div class="col-8">\n' +
+                    '\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        \n' +
+                    '        \n' +
+                    '    </div>\n' +
+                    '</div>\n' +
+                    '</div>')
+                .openPopup()
+                .on('mouseover', () => {
+                    polygon = L.polygon([
+                        [value.x, value.y],
+                        [value.x, value.y],
+                    ]).addTo(map);
+                })
+                .on('mouseout', () => {
+                    map.removeLayer(polygon);
+                })});
+
+    function correctPolishLetters(inputString) {
+        // mapping for characters
+        const mapping = {
+            ą: "a",
+            ć: "c",
+            ę: "e",
+            ł: "l",
+            ń: "n",
+            ó: "o",
+            ś: "s",
+            ź: "z",
+            ż: "z",
+        };
+
+        return (
+            inputString
+                // split the string into an array
+                .split("")
+                .map(
+                    (char) =>
+                        // check if mapping has a key with the current character
+                        Object.keys(mapping).includes(char)
+                            ? mapping[char] // if yes, return its replacement
+                            : char // if not, return it unchanged
+                )
+                // join the array to a string
+                .join("")
+        );
+    }
+
+</script>
+
+</body>
+</html>

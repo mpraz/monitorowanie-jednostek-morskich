@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoring Statków Morskich</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+    <link rel="stylesheet" th:href="@{../ui.css}"/>
+    <link rel="stylesheet" th:href="@{../uiDetails.css}"/>
+
+    <style>#map { height: 1080px; }
+    h1{font-size: 14px; font-family: "Open Sans"}</style>
+</head>
+<body>
+<div id="wrapper">
+
+    <div id="header" class="header">
+
+        <div class="header-nav box">
+            <a href="/" class="header-nav__back abt-n-db abt-c-db loadScr" title="Wróć na poprzednią stronę.">
+                <div>
+                    <a class="w3-left w3-btn" href="/">❮ Wróć</a>
+                </div>
+            </a>
+            <div class="nav box">
+                <div class="nav__tools float-right">
+                </div>
+            </div>
+
+            <h1 style="font-size:1.7em;">🛳 Ruch statków w portach polskich</h1>
+        </div>
+    </div>
+
+
+<div class="main-details box">
+
+    <div class="connection-details__item row abt-focusable" tabindex="0">
+        <div class="row">
+            <div class="col-2 col-12--phone">
+                <h3 class="connection-details__label" th:text="${port.name}">name</h3>
+                <a href="#" th:href="${port.camLink}" class="btn btn--outline btn--color-second loadScr txlc" title="">Zobacz obraz z kamery</a>
+            </div>
+            <div class="col-10 col-12--phone">
+                <div class="row">
+                    <div class="col-4 col-12--phone">
+                        <span class="item-label txlc">Opis portu</span>
+                        <strong class="item-value txld" th:text="${port.description}">description</strong>
+                    </div>
+                    <div class="col-2 col-12--phone">
+                        <span class="item-label txlc">Data powstania</span>
+                        <strong class="item-value txlc" th:text="${port.openedDate}">openedDate</strong>
+                    </div>
+                    <div class="col-2 col-12--phone">
+                        <span class="item-label txlc">Powierzchnia portu</span>
+                        <strong class="item-value" th:text="${port.size}">size</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="connection-details__item row abt-focusable" tabindex="0">
+        <div class="row">
+            <div class="col-2 col-12--phone">
+                <h3 class="connection-details__label">Statki w porcie</h3>
+            </div>
+            <div class="col-10 col-12--phone">
+                <div id="wrapper-table" class="row box--flex--wrap">
+
+                    <table id="tabela" class="display">
+                        <thead>
+                        <tr>
+                            <th>Lp.</th>
+                            <th>Nazwa statku</th>
+                            <th>Bandera</th>
+                            <th>Rodzaj statku</th>
+                            <th>ETA</th>
+                            <th>ATA</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="prod, iter: ${vessels}">
+                            <td th:text="${iter.count}">Lp.</td>
+                            <td th:text="${prod.vesselName}">Nazwa statku</td>
+                            <td th:text="${prod.vesselFlag}">Bandera</td>
+                            <td th:text="${prod.vesselType}">Rodzaj statku</td>
+                            <td th:text="${prod.eta}">ETA/td>
+                            <td th:text="${prod.ata}">ATA/td>
+                            <td th:text="${prod.statusId}">Status/td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#tabela').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Polish.json"
+            }
+        });
+    });
+</script>
+</body>
+</html>
