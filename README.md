@@ -1,5 +1,11 @@
 # Dokumentacja
 
+### Opis aplikacji
+
+Aplikacja prezentuje aktualnie znajdujące się statki w Porcie Gdynia, Porcie Gdańsk Port Północny i Gdańsk Nowy Port, Porcie Świnoujście, Porcie Police, Porcie Szczecin.
+Po kliknięciu na statek możemy zapoznać się z podstawowymi informacjami, np. skąd statek przypłynął, kiedy wpłynął do portu, a także z jakiego pochodzi kraju.
+Dodatkowo po kliknięciu w szczegóły danego portu, możemy w formie tabeli zapoznać się z aktualnymi statkami w porcie. Bardzo łatwo też można znaleźć statki, które dokują w porcie już kilka lat!
+
 ### Cel
 
 Celem budowy aplikacji było przede wszystkim zaznajomienie się z podstawami frameworka SpringBoot oraz obsługa danych poprzez API dostarczanych w różnych formatach.
@@ -41,6 +47,9 @@ w przypadku problemów z uruchomieniem należy utworzyć bazę danych ręcznie:
 su - postgres
 a następnie
 create database marinas;
+
+Aplikacja dostępna pod adresem:
+http://localhost:8000
 
 ### Demonstracja
 
