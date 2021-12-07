@@ -39,11 +39,18 @@ Poniższe polecenia dot. uruchomienia aplikacji w środowisku Ubuntu 18
 
 1. GIT - czyli klonujemy kod:
 Przechodzimy od katalogu, ktory bedzie zawieral repozytorium
+```
 cd ~/Project
+```
+
 Tworzymy nowy katalog do przechowywania repozytorium
+```
 mkdir -p ~/Project
+```
 Aby sklonować repozytorium, uruchamiamy ponizsze polecenie:
+```
 git clone https://github.com/mpraz/monitorowanie-jednostek-morskich.git monitorowanie-jednostek-morskich
+```
 
 2. Maven - aby wygenerować jar-a
 Instalacja Maven'a:
