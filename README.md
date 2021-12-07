@@ -34,15 +34,62 @@ Pomysły:
 * oznaczenie rodzajów statków za pomocą innej ikony
 * dodanie lokalizacji latarni morskich
 
+### Przygotowanie środowiska
+Poniższe polecenia dot. uruchomienia aplikacji w środowisku Ubuntu 18
+
+1. GIT - czyli klonujemy kod:
+Przechodzimy od katalogu, ktory bedzie zawieral repozytorium
+cd ~/Project
+Tworzymy nowy katalog do przechowywania repozytorium
+mkdir -p ~/Project
+Aby sklonować repozytorium, uruchamiamy ponizsze polecenie:
+git clone https://github.com/mpraz/monitorowanie-jednostek-morskich.git monitorowanie-jednostek-morskich
+
+2. Maven - aby wygenerować jar-a
+Instalacja Maven'a:
+```
+sudo apt update
+sudo apt install maven
+mvn -version
+```
+Komplilacja:
+```
+mvn clean compile package -DskipTests
+```
+3. Docker - aby uruchomić środowisko
+
+Instalacja Dockera:
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+
+Instalacja Docker-Compose:
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
+Start dockera:
+```
+sudo dockerd --iptables=false &
+docker-compose up --force-recreate
+```
+Dla diagnostyki:
+```
+sudo dockerd -D
+```
+
 ### Uruchomienie aplikacji
 należy przejść do katalogu z projektem i wykonać polecenie:
 
+```
 docker-compose up --force-recreate
-
+```
 w przypadku problemów z uruchomieniem należy utworzyć bazę danych ręcznie:
 
-- uruchomić dockera
-- przejść do konsoli kontenera bazy danych
+- uruchomić Dockera 
+- przejść do konsoli kontenera bazy danych (docker-compose exec server bash)
 - wykonać polecenia:
 su - postgres
 a następnie
