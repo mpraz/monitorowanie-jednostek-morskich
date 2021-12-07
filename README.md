@@ -97,10 +97,23 @@ w przypadku problemów z uruchomieniem należy utworzyć bazę danych ręcznie:
 
 - uruchomić Dockera 
 - przejść do konsoli kontenera bazy danych (docker-compose exec server bash)
-- wykonać polecenia:
+
+```
+docker ps
+docker exec -it db /bin/bash
 su - postgres
-a następnie
+whoami
+psql
 create database marinas;
+```
+- wykonać polecenia:
+```
+su - postgres
+```
+a następnie
+```
+create database marinas;
+```
 
 Aplikacja dostępna pod adresem:
 http://localhost:8000
